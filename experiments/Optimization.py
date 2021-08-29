@@ -3,6 +3,7 @@ from algorithms.Simplex import Simplex
 from algorithms.Powell import Powell
 from algorithms.BFGS import BFGS
 from algorithms.LBFGS import LBFGS
+from algorithms.Bayesian import Bayesian
 
 def SimplexRun(volume, goalSlice, origin, transformation, display):  
     sliceWidth = goalSlice.GetWidth()
@@ -15,6 +16,14 @@ def SimplexRun(volume, goalSlice, origin, transformation, display):
     solution = registration.Execute(transformation, goalSlice, display)
     transformation.SetParameters(solution)
     return transformation
+
+def BayesianRun(volume, goalSlice, origin, transformation, opt): 
+    sliceWidth = goalSlice.GetWidth()
+    sliceHeight = goalSlice.GetHeight()
+    outputSpacing = list(goalSlice.GetSpacing()) + [1]
+    registration = Bayesian(volume, sliceWidth, sliceHeight, outputSpacing, origin)   
+    solution = registration.Execute(transformation, goalSlice, opt)
+    return solution
 
 def PowellRun(volume, goalSlice, origin, transformation):  
     sliceWidth = goalSlice.GetWidth()

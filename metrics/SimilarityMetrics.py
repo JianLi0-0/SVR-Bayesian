@@ -1,5 +1,6 @@
 import SimpleITK as sitk
 import numpy as np
+import time
 
 def SumeOfAbsoluteDifferences(img1, img2):
     diff = 0

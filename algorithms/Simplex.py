@@ -2,7 +2,7 @@
 import scipy.optimize as opt
 from metrics import SimilarityMetrics as metrics
 import ExtractSliceFromVolume as extractor
- 
+
 class Simplex:
     
     name = "simplex"
