@@ -59,16 +59,17 @@ class BayesianSVR:
         self.goalSlice = sitk.GetImageFromArray(self.cv2_img)
         self.goalSlice.SetSpacing((spacing, spacing))
         # print(self.goalSlice)
+        self.plot_goal_slice = True
         t0 = time.time()
         angle_positon = Float64MultiArray()
         transformation = sitk.Euler3DTransform()
-        solution = Optimization.BayesianRun(volume, self.goalSlice, origin, transformation, opt=(100, 300, 1))
+        solution = Optimization.BayesianRun(volume, self.goalSlice, origin, transformation, opt=(20, 40, 1))
+        print("time cost", time.time() - t0)
         sol = [solution['params']['rx'], solution['params']['ry'], solution['params']['rz'], solution['params']['tx'], solution['params']['ty'], solution['params']['tz']]
         transformation.SetParameters(sol)
         solution = Optimization.SimplexRun(volume, self.goalSlice, origin, transformation, display=True) 
         self.finalSlice = ExtractSliceFromVolume.Execute(volume, solution, self.servo_size[1], self.servo_size[0], out_spacing, origin)
         angle_positon.data = solution.GetParameters()
-        print("time cost", time.time() - t0)
 
         self.plot = True
 
@@ -79,6 +80,7 @@ class BayesianSVR:
         print("Ready to do the ultrasound image Registration.")
         rate = rospy.Rate(1)
         self.plot = False
+        self.plot_goal_slice = False
         while rospy.is_shutdown() is False:
             if self.plot is True:
                 fig = plt.figure(figsize=(10,5))
@@ -90,6 +92,13 @@ class BayesianSVR:
                 ax.set_title('finalSlice')
                 plt.show()
                 self.plot = False
+            if self.plot_goal_slice is True:
+                fig = plt.figure(figsize=(5,5))
+                ax = fig.add_subplot(1, 1, 1)
+                plt.imshow(sitk.GetArrayFromImage(self.goalSlice), cmap=plt.cm.Greys_r)
+                ax.set_title('goalSlice')
+                plt.show()
+                self.plot_goal_slice = False
             rate.sleep()
         rospy.spin()
 

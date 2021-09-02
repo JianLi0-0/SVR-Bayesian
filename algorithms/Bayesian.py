@@ -31,11 +31,11 @@ class Bayesian:
         # res = opt.minimize(self.rosen, initialTransformation.GetParameters(), method='nelder-mead', options={'xtol': 1e-9, 'disp': display})
 
         pbounds ={'rx': (-0.01, 0.3),
-                  'ry': (1.1, 2.0),
+                  'ry': (1.45, 1.65),
                   'rz': (-0.06, 0.06),
-                  'tx': (0, 60),
+                  'tx': (15, 40),
                   'ty': (7, 9.5),
-                  'tz': (25, 55)}
+                  'tz': (35, 55)}
 
         optimizer = BayesianOptimization(
             f=self.rosen,
